@@ -1,5 +1,8 @@
 ## wagtail-markdown: Markdown fields and blocks for Wagtail
 
+_**Note**: In this fork, I try to integrate all the pending Pull Requests in the original repository.
+For this reason (and avoid confusion), I upgrade the version number to 0.5._
+
 Tired of annoying rich text editors getting in the way of your content
 input?  Wish Wagtail worked more like a wiki?  Well, now it can.
 
