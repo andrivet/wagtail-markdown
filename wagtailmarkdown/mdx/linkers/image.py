@@ -8,29 +8,19 @@
 # warranty.
 #
 
-import re
-
-from django.db import models
-from django.utils.safestring import mark_safe
 from django.core.exceptions import ObjectDoesNotExist
-
-from wagtail.wagtailcore.models import Page
-from wagtail.wagtailadmin.edit_handlers import FieldPanel    
-from wagtail import wagtailimages
-
-import markdown
-from markdown.util import AtomicString
 from markdown.util import etree
+from wagtail import wagtailimages
 
 # TODO: Default spec and class should be configurable, because they're
 # dependent on how the project is set up.  Hard-coding of 'left',
 # 'right' and 'full-width' should be removed.
-class Linker:
-    def run(self, fname, optstr):
-        opts = {}
 
-        opts['spec'] = 'width-500'
-        opts['classname'] = 'left'
+
+class Linker:
+    @staticmethod
+    def run(fname, optstr):
+        opts = {'spec': 'width-500', 'classname': 'left'}
 
         for opt in optstr:
             bits = opt.split('=', 1)
@@ -40,6 +30,9 @@ class Linker:
             if len(bits) > 1:
                 value = bits[1]
 
+            width = None
+            height = None
+
             if opt == 'left':
                 opts['classname'] = 'left'
             elif opt == 'right':
@@ -47,16 +40,19 @@ class Linker:
             elif opt == 'full':
                 opts['classname'] = 'full-width'
             elif opt == 'width':
-                try:
-                    opts['spec'] = "width-%d" % int(value)
-                except ValueError:
-                    pass
+                if not value.isdigit():
+                    raise ValueError("An integer was expected for key '{1}'. Found '{2}'".format(opt), value)
+                opts['spec'] = "width-%d" % int(value)
+            elif opt == 'height':
+                if not value.isdigit():
+                    raise ValueError("An integer was expected for key '{1}'. Found '{2}'".format(opt), value)
+                opts['spec'] = "height-%d" % int(value)
+
         try:
-            image = wagtailimages.models.get_image_model().objects.get(title = fname)
+            image = wagtailimages.get_image_model().objects.get(title=fname)
         except ObjectDoesNotExist:
             return '[image %s not found]' % (fname,)
 
-        url = image.file.url
         rendition = image.get_rendition(opts['spec'])
 
         a = etree.Element('a')

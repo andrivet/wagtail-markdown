@@ -8,15 +8,12 @@
 # warranty.
 #
 
+import wagtailmarkdown.utils
 from django import forms
 from django.db.models import TextField
-from django.utils.translation import ugettext_lazy as _
-
 from wagtail.utils.widgets import WidgetWithScript
-from wagtail.wagtailcore.blocks import TextBlock
 from wagtail.wagtailadmin.edit_handlers import FieldPanel
-
-import wagtailmarkdown.utils
+from wagtail.wagtailcore.blocks import TextBlock
 
 
 class MarkdownTextarea(WidgetWithScript, forms.widgets.Textarea):
@@ -29,8 +26,8 @@ class MarkdownTextarea(WidgetWithScript, forms.widgets.Textarea):
     @property
     def media(self):
         return forms.Media(
-            css = { 'all': ( 'wagtailmarkdown/css/simplemde.min.css', ) },
-            js = (
+            css={'all': ('wagtailmarkdown/css/simplemde.min.css',)},
+            js=(
                 'wagtailmarkdown/js/simplemde.min.js',
                 'wagtailmarkdown/js/simplemde.attach.js',
             )
@@ -48,8 +45,8 @@ class MarkdownBlock(TextBlock):
     @property
     def media(self):
         return forms.Media(
-            css = { 'all': ( 'wagtailmarkdown/css/simplemde.min.css', ) },
-            js = (
+            css={'all': ('wagtailmarkdown/css/simplemde.min.css',)},
+            js=(
                 'wagtailmarkdown/js/simplemde.min.js',
                 'wagtailmarkdown/js/simplemde.attach.js',
             )
@@ -58,9 +55,9 @@ class MarkdownBlock(TextBlock):
 
 class MarkdownField(TextField):
     def formfield(self, **kwargs):
-        defaults = {'widget': MarkdownTextarea}                                                  
-        defaults.update(kwargs)                                                              
-        return super(MarkdownField, self).formfield(**defaults)                              
+        defaults = {'widget': MarkdownTextarea}
+        defaults.update(kwargs)
+        return super(MarkdownField, self).formfield(**defaults)
 
     def __init__(self, **kwargs):
         super(MarkdownField, self).__init__(**kwargs)

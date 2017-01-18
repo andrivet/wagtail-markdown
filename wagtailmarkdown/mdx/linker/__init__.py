@@ -8,12 +8,12 @@
 # warranty.
 #
 
-import markdown
-from markdown.util import AtomicString
-from markdown.util import etree
 from importlib import import_module
 
+import markdown
+
 LINKER_RE = r'<:([a-z]+:)?([^>|\n]+)((\|[^>|\n]+){0,})>'
+
 
 class LinkerPattern(markdown.inlinepatterns.Pattern):
     def __init__(self, re, md, linktypes):
@@ -23,17 +23,17 @@ class LinkerPattern(markdown.inlinepatterns.Pattern):
     def handleMatch(self, m):
         linktypes = self.linktypes
         opts = []
-        if m.group(3) != None and len(m.group(4)):
+        if m.group(3) is not None and len(m.group(4)):
             opts = m.group(4).split('|')[1:]
 
-        type = m.group(2)
-        if type == None:
-            type = '__default__'
-        mod = import_module(linktypes[type])
+        typ = m.group(2)
+        if typ is None:
+            typ = '__default__'
+        mod = import_module(linktypes[typ])
         c = mod.Linker()
 
         return c.run(m.group(3), opts)
-        return '[invalid link]'
+
 
 class LinkerExtension(markdown.Extension):
     def __init__(self, linktypes):
@@ -42,6 +42,7 @@ class LinkerExtension(markdown.Extension):
 
     def extendMarkdown(self, md, md_globals):
         md.inlinePatterns['linker'] = LinkerPattern(LINKER_RE, md, self.linktypes)
+
 
 def makeExtension(configs=None):
     return LinkerExtension(configs=configs)

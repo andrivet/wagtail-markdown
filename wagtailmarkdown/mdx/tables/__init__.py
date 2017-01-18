@@ -20,6 +20,7 @@ from markdown import Extension
 from markdown.blockprocessors import BlockProcessor
 from markdown.util import etree
 
+
 class TableProcessor(BlockProcessor):
     """ Process Tables. """
 
@@ -52,7 +53,7 @@ class TableProcessor(BlockProcessor):
                 align.append(None)
         # Build table
         table = etree.SubElement(parent, 'table')
-        table.set('class', 'wftable')
+        table.set('class', 'table-markdown')
         thead = etree.SubElement(table, 'thead')
         self._build_row(header, thead, align, border)
         tbody = etree.SubElement(table, 'tbody')
