@@ -14,8 +14,6 @@ A simple example:
 Copyright 2009 - [Waylan Limberg](http://achinghead.com)
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 from markdown import Extension
 from markdown.blockprocessors import BlockProcessor
 from markdown.util import etree
@@ -26,8 +24,8 @@ class TableProcessor(BlockProcessor):
 
     def test(self, parent, block):
         rows = block.split('\n')
-        return (len(rows) > 2 and '|' in rows[0] and 
-                '|' in rows[1] and '-' in rows[1] and 
+        return (len(rows) > 2 and '|' in rows[0] and
+                '|' in rows[1] and '-' in rows[1] and
                 rows[1].strip()[0] in ['|', ':', '-'])
 
     def run(self, parent, blocks):
@@ -67,7 +65,7 @@ class TableProcessor(BlockProcessor):
         if parent.tag == 'thead':
             tag = 'th'
         cells = self._split_row(row, border)
-        # We use align here rather than cells to ensure every row 
+        # We use align here rather than cells to ensure every row
         # contains the same number of columns.
         for i, a in enumerate(align):
             c = etree.SubElement(tr, tag)
@@ -93,7 +91,7 @@ class TableExtension(Extension):
 
     def extendMarkdown(self, md, md_globals):
         """ Add an instance of TableProcessor to BlockParser. """
-        md.parser.blockprocessors.add('table', 
+        md.parser.blockprocessors.add('table',
                                       TableProcessor(md.parser),
                                       '<hashheader')
 

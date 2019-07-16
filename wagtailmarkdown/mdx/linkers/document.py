@@ -8,14 +8,15 @@
 # warranty.
 #
 
-from django.core.exceptions import ObjectDoesNotExist
-from markdown.util import etree
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
+
 from wagtail import wagtaildocs
 
+from markdown.util import etree
 
-class Linker:
-    @staticmethod
-    def run(name, optstr):
+
+class Linker(object):
+    def run(self, name, optstr):
         try:
             text = name
             if len(optstr):
@@ -28,4 +29,6 @@ class Linker:
             a.text = text
             return a
         except ObjectDoesNotExist:
-            return '[document %s not found]' % (name,)
+            return '[document "{}" not found]'.format(name)
+        except MultipleObjectsReturned:
+            return '[multiple documents "{}" found]'.format(name)

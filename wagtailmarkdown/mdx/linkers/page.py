@@ -7,21 +7,24 @@
 # freely. This software is provided 'as-is', without any express or implied
 # warranty.
 #
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 
-from django.core.exceptions import ObjectDoesNotExist
 from markdown.util import etree
-from wagtail.wagtailcore.models import Page
+
+try:
+    from wagtail.core.models import Page
+except ImportError:
+    from wagtail.wagtailcore.models import Page
 
 # TODO: In Waiflike, this only allowed linking to SitePage (the main
 # content type).  Should this be configurable?
 
 
-class Linker:
-    @staticmethod
-    def run(name, optstr):
+class Linker(object):
+    def run(self, name, optstr):
         try:
             text = name
-            if len(optstr):
+            if optstr:
                 text = optstr[0]
 
             page = Page.objects.get(title=name)
@@ -31,4 +34,6 @@ class Linker:
             a.text = text
             return a
         except ObjectDoesNotExist:
-            return '[page %s not found]' % (name,)
+            return '[page "{}" not found]'.format(name)
+        except MultipleObjectsReturned:
+            return '[multiple pages "{}" found]'.format(name)
