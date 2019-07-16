@@ -48,7 +48,11 @@ class Linker(object):
                     opts['spec'] = "width-%d" % int(value)
                 except ValueError:
                     pass
-
+            elif opt == 'height':
+                try:
+                    opts['spec'] = "height-%d" % int(value)
+                except ValueError:
+                    pass
         try:
             image = get_image_model().objects.get(title=fname)
         except ObjectDoesNotExist:
