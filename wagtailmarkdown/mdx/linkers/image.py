@@ -41,11 +41,11 @@ class Linker:
                 opts['classname'] = 'full-width'
             elif opt == 'width':
                 if not value.isdigit():
-                    raise ValueError("An integer was expected for key '{1}'. Found '{2}'".format(opt), value)
+                    raise ValueError("An integer was expected for key '{1}'. Found '{2}'".format(opt, value))
                 opts['spec'] = "width-%d" % int(value)
             elif opt == 'height':
                 if not value.isdigit():
-                    raise ValueError("An integer was expected for key '{1}'. Found '{2}'".format(opt), value)
+                    raise ValueError("An integer was expected for key '{1}'. Found '{2}'".format(opt, value))
                 opts['spec'] = "height-%d" % int(value)
 
         try:
